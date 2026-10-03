@@ -1,46 +1,42 @@
 import React, { Component } from "react";
-import Loading from "./Loading.jsx";
 import Creditos from "./Creditos.jsx";
 import Cartao from "./Cartao.jsx";
+import Loading from "./Loading.jsx";
+import MeuPonto from "./MeuPonto.jsx";
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      latitude: null,
-      longitude: null,
-      mensagemDeErro: null,
-    };
-
-    this.obterLocalizacao = this.obterLocalizacao.bind(this);
-  }
+  state = {
+    latitude: null,
+    longitude: null,
+    horarioLocalizacao: null,
+    mensagemDeErro: null,
+  };
 
   componentDidMount() {
     this.obterLocalizacao();
   }
 
-  obterLocalizacao() {
+  obterLocalizacao = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (posicao) => {
           this.setState({
             latitude: posicao.coords.latitude,
             longitude: posicao.coords.longitude,
+            horarioLocalizacao: Date.now(),
             mensagemDeErro: null,
           });
         },
         (erro) => {
+          console.log(erro);
           this.setState({
-            mensagemDeErro: "Permissão negada ou erro ao obter localização.",
+            mensagemDeErro:
+              "Não foi possível obter sua localização. Libere o acesso no navegador e atualize a página.",
           });
         },
       );
-    } else {
-      this.setState({
-        mensagemDeErro: "Geolocalização não é suportada neste navegador.",
-      });
     }
-  }
+  };
 
   render() {
     const estiloSubtitulo = {
@@ -54,7 +50,8 @@ class App extends Component {
       return new Date().getFullYear();
     }
 
-    const { latitude, longitude, mensagemDeErro } = this.state;
+    const { latitude, longitude, mensagemDeErro, horarioLocalizacao } =
+      this.state;
 
     return (
       <div>
@@ -62,33 +59,27 @@ class App extends Component {
           <i className="pi pi-map-marker" style={{ marginRight: "8px" }}></i>
           RolêRadar
         </h1>
-        <p style={estiloSubtitulo}>Descubra o que existe perto de você!</p>
+        <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
 
         <Creditos />
 
-        <Cartao cabecalho="Sua Localização Atual">
-          {mensagemDeErro ? (
-            <p style={{ color: "red", fontFamily: "Monocraft, sans-serif" }}>
-              {mensagemDeErro}
-            </p>
-          ) : latitude && longitude ? (
-            <div
-              style={{ fontFamily: "Monocraft, sans-serif", margin: "15px 0" }}
-            >
-              <p>
-                <strong>Latitude:</strong> {latitude}
-              </p>
-              <p>
-                <strong>Longitude:</strong> {longitude}
-              </p>
-            </div>
-          ) : (
-            <Loading />
-          )}
-        </Cartao>
+        {mensagemDeErro ? (
+          <p>{mensagemDeErro}</p>
+        ) : !latitude ? (
+          <Loading mensagem="Aguardando permissão de localização..." />
+        ) : (
+          <Cartao cabecalho="Você está aqui">
+            <MeuPonto
+              latitude={latitude}
+              longitude={longitude}
+              horarioLocalizacao={horarioLocalizacao}
+              onAtualizar={this.obterLocalizacao}
+            />
+          </Cartao>
+        )}
 
         <footer>
-          <p>RolêRadar. &copy; {obterAno()}</p>
+          <p>RolêRadar {obterAno()}</p>
         </footer>
       </div>
     );
