@@ -5,6 +5,7 @@ import Loading from "./Loading.jsx";
 import MeuPonto from "./MeuPonto.jsx";
 import geoapifyClient from "../utils/geoapifyClient.js";
 import Busca from "./Busca.jsx";
+import ListaLugares from "./ListaLugares.jsx";
 
 class App extends Component {
   state = {
@@ -12,6 +13,7 @@ class App extends Component {
     longitude: null,
     horarioLocalizacao: null,
     mensagemDeErro: null,
+    lugares: null,
   };
 
   componentDidMount() {
@@ -54,7 +56,9 @@ class App extends Component {
         },
       });
 
-      console.log(resposta.data.features);
+      this.setState({
+        lugares: resposta.data.features,
+      });
     } catch (erro) {
       console.error(erro);
     }
@@ -77,44 +81,59 @@ class App extends Component {
       longitude,
       mensagemDeErro,
       horarioLocalizacao,
+      lugares,
     } = this.state;
 
     return (
       <div>
-        <h1 className="titulo">
-          <i
-            className="pi pi-map-marker"
-            style={{ marginRight: "8px" }}
-          ></i>
-          RolêRadar
-        </h1>
+        <div className="grid">
+          <div className="col-12 md:col-6">
+            <h1 className="titulo">
+              <i
+                className="pi pi-map-marker"
+                style={{ marginRight: "8px" }}
+              ></i>
+              RolêRadar
+            </h1>
 
-        <p style={estiloSubtitulo}>
-          Descubra o que existe perto de você
-        </p>
+            <p style={estiloSubtitulo}>
+              Descubra o que existe perto de você
+            </p>
 
-        <Creditos />
+            <Creditos />
 
-        {mensagemDeErro ? (
-  <p>{mensagemDeErro}</p>
-) : !latitude ? (
-  <Loading mensagem="Aguardando permissão de localização..." />
-) : (
-  <>
-    <Cartao cabecalho="Você está aqui">
-      <MeuPonto
-        latitude={latitude}
-        longitude={longitude}
-        horarioLocalizacao={horarioLocalizacao}
-        onAtualizar={this.obterLocalizacao}
-      />
-    </Cartao>
+            {mensagemDeErro ? (
+              <p>{mensagemDeErro}</p>
+            ) : !latitude ? (
+              <Loading mensagem="Aguardando permissão de localização..." />
+            ) : (
+              <>
+                <Cartao cabecalho="Você está aqui">
+                  <MeuPonto
+                    latitude={latitude}
+                    longitude={longitude}
+                    horarioLocalizacao={horarioLocalizacao}
+                    onAtualizar={this.obterLocalizacao}
+                  />
+                </Cartao>
 
-    <Cartao cabecalho="O que você procura?">
-      <Busca onBuscaRealizada={this.onBuscaRealizada.bind(this)} />
-    </Cartao>
-  </>
-)}
+                <Cartao cabecalho="O que você procura?">
+                  <Busca
+                    onBuscaRealizada={this.onBuscaRealizada.bind(this)}
+                  />
+                </Cartao>
+              </>
+            )}
+          </div>
+
+          <div className="col-12 md:col-6">
+            {lugares === null ? null : lugares.length === 0 ? (
+              <p>Nenhum lugar encontrado. Tente aumentar o raio.</p>
+            ) : (
+              <ListaLugares lugares={lugares} />
+            )}
+          </div>
+        </div>
 
         <footer>
           <p>RolêRadar {obterAno()}</p>
