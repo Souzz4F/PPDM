@@ -4,6 +4,7 @@ import Cartao from "./Cartao.jsx";
 import Loading from "./Loading.jsx";
 import MeuPonto from "./MeuPonto.jsx";
 import geoapifyClient from "../utils/geoapifyClient.js";
+import Busca from "./Busca.jsx";
 
 class App extends Component {
   state = {
@@ -95,19 +96,25 @@ class App extends Component {
         <Creditos />
 
         {mensagemDeErro ? (
-          <p>{mensagemDeErro}</p>
-        ) : !latitude ? (
-          <Loading mensagem="Aguardando permissão de localização..." />
-        ) : (
-          <Cartao cabecalho="Você está aqui">
-            <MeuPonto
-              latitude={latitude}
-              longitude={longitude}
-              horarioLocalizacao={horarioLocalizacao}
-              onAtualizar={this.obterLocalizacao}
-            />
-          </Cartao>
-        )}
+  <p>{mensagemDeErro}</p>
+) : !latitude ? (
+  <Loading mensagem="Aguardando permissão de localização..." />
+) : (
+  <>
+    <Cartao cabecalho="Você está aqui">
+      <MeuPonto
+        latitude={latitude}
+        longitude={longitude}
+        horarioLocalizacao={horarioLocalizacao}
+        onAtualizar={this.obterLocalizacao}
+      />
+    </Cartao>
+
+    <Cartao cabecalho="O que você procura?">
+      <Busca onBuscaRealizada={this.onBuscaRealizada.bind(this)} />
+    </Cartao>
+  </>
+)}
 
         <footer>
           <p>RolêRadar {obterAno()}</p>
