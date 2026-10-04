@@ -3,6 +3,7 @@ import Creditos from "./Creditos.jsx";
 import Cartao from "./Cartao.jsx";
 import Loading from "./Loading.jsx";
 import MeuPonto from "./MeuPonto.jsx";
+import geoapifyClient from "../utils/geoapifyClient.js";
 
 class App extends Component {
   state = {
@@ -29,6 +30,7 @@ class App extends Component {
         },
         (erro) => {
           console.log(erro);
+
           this.setState({
             mensagemDeErro:
               "Não foi possível obter sua localização. Libere o acesso no navegador e atualize a página.",
@@ -37,6 +39,25 @@ class App extends Component {
       );
     }
   };
+
+  async onBuscaRealizada(categoria, raio) {
+    const { latitude, longitude } = this.state;
+
+    try {
+      const resposta = await geoapifyClient.get("places", {
+        params: {
+          categories: categoria,
+          filter: `circle:${longitude},${latitude},${raio}`,
+          bias: `proximity:${longitude},${latitude}`,
+          limit: 20,
+        },
+      });
+
+      console.log(resposta.data.features);
+    } catch (erro) {
+      console.error(erro);
+    }
+  }
 
   render() {
     const estiloSubtitulo = {
@@ -50,16 +71,26 @@ class App extends Component {
       return new Date().getFullYear();
     }
 
-    const { latitude, longitude, mensagemDeErro, horarioLocalizacao } =
-      this.state;
+    const {
+      latitude,
+      longitude,
+      mensagemDeErro,
+      horarioLocalizacao,
+    } = this.state;
 
     return (
       <div>
         <h1 className="titulo">
-          <i className="pi pi-map-marker" style={{ marginRight: "8px" }}></i>
+          <i
+            className="pi pi-map-marker"
+            style={{ marginRight: "8px" }}
+          ></i>
           RolêRadar
         </h1>
-        <p style={estiloSubtitulo}>Descubra o que existe perto de você</p>
+
+        <p style={estiloSubtitulo}>
+          Descubra o que existe perto de você
+        </p>
 
         <Creditos />
 
