@@ -3,7 +3,7 @@
 ## Informações Integrantes
 
 - Gabriel Garibaldi - Ra: 2040482423051
-- Leonardo Correa - Ra: 204048242
+- Leonardo Correa - Ra: 2040482423047
 - Samuel Felipe - Ra: 2040482423013
 
 ## Como executar
