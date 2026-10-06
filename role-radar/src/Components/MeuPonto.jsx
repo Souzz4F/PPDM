@@ -25,35 +25,53 @@ class MeuPonto extends Component {
   }
 
   render() {
-    const { latitude, longitude, horarioLocalizacao, onAtualizar } = this.props;
-    const { agora } = this.state;
+    let latitude = this.props.latitude;
+    let longitude = this.props.longitude;
+    let horarioLocalizacao = this.props.horarioLocalizacao;
+    let onAtualizar = this.props.onAtualizar;
+    
+    let agora = this.state.agora;
 
-    const segundos = horarioLocalizacao
-      ? Math.floor((agora - horarioLocalizacao) / 1000)
-      : 0;
+    let segundos = 0;
+    if (horarioLocalizacao) {
+      segundos = Math.floor((agora - horarioLocalizacao) / 1000);
+    }
 
-    const hemisferio = latitude < 0 ? "Hemisfério Sul" : "Hemisfério Norte";
-    const latFormatada = latitude.toFixed(4);
-    const lonFormatada = longitude.toFixed(4);
+    let hemisferio = "Hemisfério Norte";
+    if (latitude < 0) {
+      hemisferio = "Hemisfério Sul";
+    }
 
-    const mapUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=300&center=lonlat:${longitude},${latitude}&zoom=16&marker=lonlat:${longitude},${latitude};color:%23d32f2f;size:48&apiKey=${GEOAPIFY_KEY}`;
+    let latFormatada = latitude.toFixed(4);
+    let lonFormatada = longitude.toFixed(4);
+
+    let mapUrl = `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=300&center=lonlat:${longitude},${latitude}&zoom=16&marker=lonlat:${longitude},${latitude};color:%23d32f2f;size:48&apiKey=${GEOAPIFY_KEY}`;
 
     return (
       <div>
         <img
           src={mapUrl}
           alt="Mapa da sua localização"
-          style={{ width: "100%", height: "auto" }}
+          style={{ width: "100%", height: "auto", marginBottom: "15px", borderRadius: "8px" }}
         />
-        <p>
+        
+        <div style={{ fontWeight: "bold", marginBottom: "5px" }}>
           Latitude: {latFormatada} | Longitude: {lonFormatada}
-        </p>
-        <p>{hemisferio}</p>
-        <p>Localização obtida há {segundos} s</p>
+        </div>
+        
+        <div style={{ marginBottom: "5px" }}>
+          {hemisferio}
+        </div>
+        
+        <div style={{ marginBottom: "15px" }}>
+          Localização obtida há {segundos} s
+        </div>
+        
         <Button
           label="Atualizar localização"
           icon="pi pi-refresh"
           onClick={onAtualizar}
+          outlined={true}
         />
       </div>
     );

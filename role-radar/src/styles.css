@@ -1,6 +1,26 @@
-.titulo{
-    color:#7111ee;
-    font-Family: 'Monocraft', sans-serif;
-    font-size:2.2rem;
-    margin-bottom:0.25rem;
+body {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.titulo {
+  color: #4338ca;
+  font-size: 2.2rem;
+  margin-bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.icone-vermelho {
+  color: #dc2626;
+}
+
+.creditos-container a {
+  color: #2563eb;
+  text-decoration: none;
+}
+.creditos-container a:hover {
+  text-decoration: underline;
 }

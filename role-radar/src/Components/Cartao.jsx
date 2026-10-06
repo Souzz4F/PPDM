@@ -1,13 +1,23 @@
-import react from "react";
+import React from "react";
 
-function Cartao({ cabecalho, children }) {
+function Cartao(props) {
   return (
-    <div className="cartao">
-      {cabecalho && <div className="cartao-cabecalho">{cabecalho}</div>}
-
-      <hr className="cartao-linha" />
-
-      <div className="cartao-children">{children}</div>
+    <div
+      className="cartao"
+      style={{
+        border: "1px solid #ccc",
+        marginBottom: "15px",
+        borderRadius: "5px",
+      }}
+    >
+      <div
+        style={{ backgroundColor: "#eee", padding: "10px", fontWeight: "bold" }}
+      >
+        {props.cabecalho}
+      </div>
+      <div className="cartao-children" style={{ padding: "10px" }}>
+        {props.children}
+      </div>
     </div>
   );
 }

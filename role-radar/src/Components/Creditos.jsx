@@ -13,7 +13,7 @@ function Creditos() {
             </a>
             <span> • </span>
             <a
-                href="https://www.openstreetmap.org/"
+                href="https://www.openstreetmap.org/copyright"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="creditos-link"

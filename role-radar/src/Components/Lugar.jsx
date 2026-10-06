@@ -1,38 +1,54 @@
-import Cartao from "./Cartao.jsx";
+import React from "react";
 
-function formatarDistancia(distancia) {
-  if (distancia < 1000) {
-    return `${Math.round(distancia)} m`;
+function formatarDistancia(metros) {
+  if (metros < 1000) {
+    return metros + " m";
   }
 
-  return `${(distancia / 1000).toFixed(1).replace(".", ",")} km`;
+  let quilometros = metros / 1000;
+  return quilometros.toFixed(1).replace(".", ",") + " km";
 }
 
-function Lugar({ numero, nome, endereco, distancia }) {
-  const estiloNumero = {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "30px",
-    height: "30px",
-    borderRadius: "50%",
-    backgroundColor: "#6c63ff",
-    color: "white",
-    fontWeight: "bold",
-  };
+function Lugar(props) {
+  let lugar = props.lugar;
+  let indice = props.indice;
+
+  let nome = lugar.properties.name;
+  if (!nome) {
+    nome = "Sem nome";
+  }
 
   return (
-    <Cartao cabecalho={formatarDistancia(distancia)}>
-      <div>
-        <span style={estiloNumero}>{numero}</span>
+    <div
+      style={{
+        border: "1px solid #ccc",
+        padding: "10px",
+        marginBottom: "10px",
+      }}
+    >
+      <div>a {formatarDistancia(lugar.properties.distance)}</div>
 
-        <strong style={{ marginLeft: "10px" }}>
-          {nome || "Sem nome"}
-        </strong>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{
+            width: "30px",
+            height: "30px",
+            backgroundColor: "blue",
+            color: "white",
+            borderRadius: "15px",
+            textAlign: "center",
+            marginRight: "10px",
+          }}
+        >
+          {indice + 1}
+        </div>
 
-        <p>{endereco}</p>
+        <div>
+          <div style={{ fontWeight: "bold" }}>{nome}</div>
+          <div>{lugar.properties.address_line2}</div>
+        </div>
       </div>
-    </Cartao>
+    </div>
   );
 }
 
